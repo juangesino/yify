@@ -90,4 +90,21 @@ module Yify
 		@uri = 'http://yts.to/api/v2/list_movies.json?fill=false'
 		response
 	end
+
+	def self.suggest(id)
+		@uri = "http://yts.to/api/v2/movie_suggestions.json?movie_id=#{id}"
+		uri = URI.parse(@uri)
+		http = Net::HTTP.new(uri.host, uri.port)
+		request = Net::HTTP::Get.new(uri.request_uri)
+		response = http.request(request)
+		response = JSON.parse(response.body)
+		response = OpenStruct.new(response["data"])
+		count = 0
+		response.movie_suggestions.each do |movie|
+			response.movie_suggestions[count] = OpenStruct.new(movie)
+			count += 1
+		end
+		@uri = 'http://yts.to/api/v2/list_movies.json?fill=false'
+		response
+	end
 end
