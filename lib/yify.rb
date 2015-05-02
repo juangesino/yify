@@ -78,4 +78,21 @@ module Yify
 	def self.sanitize(input)
 		input.gsub('=','%3D').gsub('+','%2B').gsub(',','%2C').gsub(' ','%20')
 	end
+
+	def self.movie(id)
+		@uri = "http://yts.to/api/v2/movie_details.json?movie_id=#{id}"
+		uri = URI.parse(@uri)
+		http = Net::HTTP.new(uri.host, uri.port)
+		request = Net::HTTP::Get.new(uri.request_uri)
+		response = http.request(request)
+		response = JSON.parse(response.body)
+		response = OpenStruct.new(response["data"])
+		# count = 0
+		# response.movies.each do |movie|
+		# 	response.movies[count] = OpenStruct.new(movie)
+		# 	count += 1
+		# end
+		@uri = 'http://yts.to/api/v2/list_movies.json?fill=false'
+		response
+	end
 end
