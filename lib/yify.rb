@@ -80,18 +80,13 @@ module Yify
 	end
 
 	def self.movie(id)
-		@uri = "http://yts.to/api/v2/movie_details.json?movie_id=#{id}"
+		@uri = "http://yts.to/api/v2/movie_details.json?movie_id=#{id}&with_images=true"
 		uri = URI.parse(@uri)
 		http = Net::HTTP.new(uri.host, uri.port)
 		request = Net::HTTP::Get.new(uri.request_uri)
 		response = http.request(request)
 		response = JSON.parse(response.body)
 		response = OpenStruct.new(response["data"])
-		# count = 0
-		# response.movies.each do |movie|
-		# 	response.movies[count] = OpenStruct.new(movie)
-		# 	count += 1
-		# end
 		@uri = 'http://yts.to/api/v2/list_movies.json?fill=false'
 		response
 	end
